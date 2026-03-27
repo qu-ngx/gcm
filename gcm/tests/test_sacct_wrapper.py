@@ -337,6 +337,24 @@ def test_not_should_patch_sacct_cmd(
             ],
             "America/Los_Angeles",
         ),
+        # DST fall-back (America/Los_Angeles): 01:01 PST minus 2m slack
+        # remains in 01:59 because this is the post-fall-back hour (-08:00).
+        (
+            ("-P",),
+            datetime.fromisoformat("2021-11-07T01:01:00-08:00"),
+            ["jobid"],
+            timedelta(minutes=2),
+            None,
+            [
+                "sacct",
+                "-P",
+                "-o",
+                "jobid,end",
+                "-S",
+                "2021-11-07T01:59:00",
+            ],
+            "America/Los_Angeles",
+        ),
     ],
 )
 def test_get_patched_sacct_cmd(
